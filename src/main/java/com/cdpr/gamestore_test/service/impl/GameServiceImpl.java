@@ -38,6 +38,9 @@ public class GameServiceImpl implements GameService {
     @Override
     @Nullable
     public GameDto searchGame(String name) {
+        if(gameRepository.findGameByName(name)==null){
+            throw new RuntimeException("There is no game with this name in our db.");
+        }
         return gameMapper.gameToGameDto(gameRepository.findGameByName(name));
     }
 
