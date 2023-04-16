@@ -37,7 +37,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Nullable
-    public GameDto searchGame(String name) {
+    public GameDto searchGame(@Nonnull final String name) {
         if(gameRepository.findGameByName(name)==null){
             throw new RuntimeException("There is no game with this name in our db.");
         }
@@ -55,23 +55,20 @@ public class GameServiceImpl implements GameService {
     @Override
     @Nullable
     public Game getGameByName(@Nonnull final String name) {
+        if(gameRepository.findGameByName(name)==null){
+            throw new RuntimeException("There is no game with this name in our db.");
+        }
         return gameRepository.findGameByName(name);
     }
 
     @Override
     public GameDto updateGame(@Nonnull final GameDto gameDto) {
     final var gameName = gameDto.getName();
-    Game game = getGameByName(gameName);
-    game = Game.builder()
-            .id(game.getId())
-            .name(gameDto.getName())
-            .price(gameDto.getPrice())
-            .description(gameDto.getDescription())
-            .releaseDate(gameDto.getReleaseDate())
-            .company(gameDto.getCompany())
-            .created(game.getCreated())
-            .updated(LocalDateTime.now())
-            .build();
+    final var gameFromDb = getGameByName(gameName);
+    Game game = gameMapper.gameDtoToGame(gameDto);
+    game.setId(gameFromDb.getId());
+    game.setUpdated(LocalDateTime.now());
+    game.setCreated(gameFromDb.getCreated());
     return gameMapper.gameToGameDto(gameRepository.save(game));
     }
 
