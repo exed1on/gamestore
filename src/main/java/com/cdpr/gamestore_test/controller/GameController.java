@@ -62,8 +62,8 @@ public class GameController {
         final var game = gameMapper.gameDtoToGame(gameDto);
         game.setCreated(LocalDateTime.now());
         game.setUpdated(LocalDateTime.now());
-
         final var addedGame = gameService.addGame(game);
+
         log.info("New game was created with name: {}", gameDto.getName());
         return gameMapper.gameToGameDto(addedGame);
     }

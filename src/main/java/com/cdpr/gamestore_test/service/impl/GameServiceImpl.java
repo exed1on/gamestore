@@ -75,7 +75,7 @@ public class GameServiceImpl implements GameService {
     @Override
     @Transactional
     public void deleteGameByName(@Nonnull final String name) {
-        if (getGameByName(name) == null) {
+        if (gameRepository.findGameByName(name) == null) {
             throw new RuntimeException("Game with current name not found in db");
         }
         gameRepository.deleteGameByName(name);
